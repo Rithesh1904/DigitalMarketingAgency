@@ -4,14 +4,14 @@ import { motion } from 'framer-motion';
 import { FiSearch, FiShare2, FiTrendingUp, FiCode, FiMail, FiAward, FiFileText, FiPenTool } from 'react-icons/fi';
 
 const allServices = [
-  { id: 1, title: 'SEO', desc: 'Boost your organic traffic and rank higher on search engines with our proven SEO strategies.', icon: <FiSearch className="w-8 h-8 text-secondary" /> },
-  { id: 2, title: 'Social Media Marketing', desc: 'Engage your audience and build brand loyalty across all major social media platforms.', icon: <FiShare2 className="w-8 h-8 text-accent" /> },
-  { id: 3, title: 'Google Ads', desc: 'Get immediate visibility and drive targeted traffic to your website with optimized paid campaigns.', icon: <FiTrendingUp className="w-8 h-8 text-primary" /> },
-  { id: 4, title: 'Website Development', desc: 'Robust, scalable, and secure web development solutions tailored to your business needs.', icon: <FiCode className="w-8 h-8 text-secondary" /> },
-  { id: 5, title: 'Email Marketing', desc: 'Nurture leads and drive conversions with highly personalized email campaigns.', icon: <FiMail className="w-8 h-8 text-accent" /> },
-  { id: 6, title: 'Branding', desc: 'Create a memorable brand identity that resonates with your target audience.', icon: <FiAward className="w-8 h-8 text-primary" /> },
-  { id: 7, title: 'Content Marketing', desc: 'Valuable, relevant content to attract and retain a clearly defined audience.', icon: <FiFileText className="w-8 h-8 text-secondary" /> },
-  { id: 8, title: 'Graphic Design', desc: 'Visually stunning designs that communicate your message effectively and beautifully.', icon: <FiPenTool className="w-8 h-8 text-accent" /> },
+  { id: 1, slug: 'seo', title: 'SEO', desc: 'Boost your organic traffic and rank higher on search engines with our proven SEO strategies.', icon: <FiSearch className="w-8 h-8 text-secondary" /> },
+  { id: 2, slug: 'social-media-marketing', title: 'Social Media Marketing', desc: 'Engage your audience and build brand loyalty across all major social media platforms.', icon: <FiShare2 className="w-8 h-8 text-accent" /> },
+  { id: 3, slug: 'google-ads', title: 'Google Ads', desc: 'Get immediate visibility and drive targeted traffic to your website with optimized paid campaigns.', icon: <FiTrendingUp className="w-8 h-8 text-primary" /> },
+  { id: 4, slug: 'website-development', title: 'Website Development', desc: 'Robust, scalable, and secure web development solutions tailored to your business needs.', icon: <FiCode className="w-8 h-8 text-secondary" /> },
+  { id: 5, slug: 'email-marketing', title: 'Email Marketing', desc: 'Nurture leads and drive conversions with highly personalized email campaigns.', icon: <FiMail className="w-8 h-8 text-accent" /> },
+  { id: 6, slug: 'branding', title: 'Branding', desc: 'Create a memorable brand identity that resonates with your target audience.', icon: <FiAward className="w-8 h-8 text-primary" /> },
+  { id: 7, slug: 'content-marketing', title: 'Content Marketing', desc: 'Valuable, relevant content to attract and retain a clearly defined audience.', icon: <FiFileText className="w-8 h-8 text-secondary" /> },
+  { id: 8, slug: 'graphic-design', title: 'Graphic Design', desc: 'Visually stunning designs that communicate your message effectively and beautifully.', icon: <FiPenTool className="w-8 h-8 text-accent" /> },
 ];
 
 const Services = () => {
@@ -88,7 +88,7 @@ const Services = () => {
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
                   <p className="text-4xl font-bold text-accent mb-1">{stat.value}</p>
-                  <p className="text-gray-600 text-sm font-medium">{stat.label}</p>
+                  <p className="text-gray-400 text-sm font-medium">{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -99,22 +99,26 @@ const Services = () => {
       <section className="py-20 app-section container mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {allServices.map((service) => (
-            <div
+            <motion.div
               key={service.id}
-              className="app-card rounded-lg p-8 shadow-sm hover:shadow-md transition-all duration-300 border-gray-200 group"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4 }}
+              className="app-card rounded-xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 group hover:-translate-y-1 transform"
             >
               <div className="w-16 h-16 bg-secondary/10 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                 {service.icon}
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">{service.title}</h3>
-              <p className="text-gray-600 mb-6">{service.desc}</p>
-              <Link to="/contact" className="text-secondary font-medium hover:text-accent transition-colors flex items-center">
+              <p className="text-gray-600 mb-6 leading-relaxed">{service.desc}</p>
+              <Link to={`/services/${service.slug}`} className="text-secondary font-semibold hover:text-accent transition-colors flex items-center group-hover:gap-2">
                 Learn More
                 <svg className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </Link>
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>
@@ -123,3 +127,4 @@ const Services = () => {
 };
 
 export default Services;
+

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FiMapPin, FiPhone, FiMail, FiClock, FiSend } from 'react-icons/fi';
+import { FiMapPin, FiPhone, FiMail, FiClock, FiSend, FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
+import { FaWhatsapp } from 'react-icons/fa';
 
 const faqs = [
   { q: 'What services do you provide?', a: 'We offer a full suite of digital marketing services including SEO, Social Media Marketing, Google Ads, Website Development, Email Marketing, Branding, Content Marketing, and Graphic Design.' },
@@ -13,8 +14,70 @@ const faqs = [
 const Contact = () => {
   const [openFaq, setOpenFaq] = useState(null);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', company: '', message: '' });
+  const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    // Clear error on change
+    if (errors[e.target.name]) setErrors({ ...errors, [e.target.name]: '' });
+  };
+
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = 'Full Name is required.';
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email Address is required.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address.';
+    }
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone Number is required.';
+    } else if (!/^[+]?[\d\s\-()]{7,15}$/.test(formData.phone)) {
+      newErrors.phone = 'Please enter a valid phone number.';
+    }
+    if (!formData.message.trim()) newErrors.message = 'Message cannot be empty.';
+    return newErrors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    // Build WhatsApp message
+    const message = [
+      '--------------------------------------',
+      'New Website Enquiry',
+      '',
+      'Name:',
+      formData.name,
+      '',
+      'Email:',
+      formData.email,
+      '',
+      'Phone:',
+      formData.phone,
+      '',
+      'Company:',
+      formData.company || 'N/A',
+      '',
+      'Message:',
+      formData.message,
+      '--------------------------------------',
+    ].join('\n');
+
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/918489421954?text=${encodedMessage}`;
+
+    setSubmitted(true);
+    // Open WhatsApp after a brief moment to let user see success UI
+    setTimeout(() => {
+      window.open(whatsappUrl, '_blank');
+    }, 800);
+  };
 
   return (
     <div>
@@ -161,76 +224,113 @@ const Contact = () => {
 
           {/* Right: Form */}
           <div className="app-card rounded-3xl shadow-xl p-10 border border-gray-100">
-            <h2 className="text-2xl font-bold text-primary mb-8">Send Us a Message</h2>
-            <form className="space-y-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="John Doe"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary transition"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="john@company.com"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary transition"
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder="+1 (555) 000-0000"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary transition"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Company</label>
-                  <input
-                    type="text"
-                    name="company"
-                    value={formData.company}
-                    onChange={handleChange}
-                    placeholder="Your Company"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary transition"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                <textarea
-                  name="message"
-                  rows={5}
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder="Tell us about your project..."
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary transition resize-none"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-primary hover:bg-secondary text-white py-4 rounded-xl font-bold transition-colors flex items-center justify-center gap-2 shadow-lg"
-                onClick={(e) => e.preventDefault()}
+            {submitted ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="flex flex-col items-center justify-center text-center py-12"
               >
-                <FiSend />
-                Send Message
-              </button>
-            </form>
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
+                  <FiCheckCircle className="w-10 h-10 text-green-500" />
+                </div>
+                <h3 className="text-2xl font-bold text-primary mb-3">Message Sent!</h3>
+                <p className="text-gray-600 mb-6 max-w-sm">
+                  WhatsApp is opening with your pre-filled message. Just press <strong>Send</strong> to connect with us!
+                </p>
+                <div className="flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 px-5 py-3 rounded-full font-semibold">
+                  <FaWhatsapp className="w-5 h-5" />
+                  Redirecting to WhatsApp...
+                </div>
+                <button
+                  className="mt-8 text-secondary underline text-sm"
+                  onClick={() => { setSubmitted(false); setFormData({ name: '', email: '', phone: '', company: '', message: '' }); }}
+                >
+                  Send another message
+                </button>
+              </motion.div>
+            ) : (
+              <>
+                <h2 className="text-2xl font-bold text-primary mb-2">Send Us a Message</h2>
+                <p className="text-gray-500 text-sm mb-8 flex items-center gap-2">
+                  <FaWhatsapp className="text-green-500 w-4 h-4" />
+                  Your enquiry will be sent directly to our WhatsApp.
+                </p>
+                <form className="space-y-5" onSubmit={handleSubmit} noValidate>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Full Name <span className="text-red-500">*</span></label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        placeholder="John Doe"
+                        className={`w-full px-4 py-3 rounded-xl border ${errors.name ? 'border-red-400 bg-red-50' : 'border-gray-200'} focus:outline-none focus:ring-2 focus:ring-secondary transition`}
+                      />
+                      {errors.name && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><FiAlertCircle className="w-3 h-3" />{errors.name}</p>}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Email Address <span className="text-red-500">*</span></label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="john@company.com"
+                        className={`w-full px-4 py-3 rounded-xl border ${errors.email ? 'border-red-400 bg-red-50' : 'border-gray-200'} focus:outline-none focus:ring-2 focus:ring-secondary transition`}
+                      />
+                      {errors.email && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><FiAlertCircle className="w-3 h-3" />{errors.email}</p>}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number <span className="text-red-500">*</span></label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        placeholder="+91 98765 43210"
+                        className={`w-full px-4 py-3 rounded-xl border ${errors.phone ? 'border-red-400 bg-red-50' : 'border-gray-200'} focus:outline-none focus:ring-2 focus:ring-secondary transition`}
+                      />
+                      {errors.phone && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><FiAlertCircle className="w-3 h-3" />{errors.phone}</p>}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Company <span className="text-gray-400 text-xs">(optional)</span></label>
+                      <input
+                        type="text"
+                        name="company"
+                        value={formData.company}
+                        onChange={handleChange}
+                        placeholder="Your Company"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary transition"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Message <span className="text-red-500">*</span></label>
+                    <textarea
+                      name="message"
+                      rows={5}
+                      value={formData.message}
+                      onChange={handleChange}
+                      placeholder="Tell us about your project..."
+                      className={`w-full px-4 py-3 rounded-xl border ${errors.message ? 'border-red-400 bg-red-50' : 'border-gray-200'} focus:outline-none focus:ring-2 focus:ring-secondary transition resize-none`}
+                    />
+                    {errors.message && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><FiAlertCircle className="w-3 h-3" />{errors.message}</p>}
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-bold transition-colors flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 duration-300"
+                  >
+                    <FaWhatsapp className="w-5 h-5" />
+                    Send via WhatsApp
+                  </button>
+                  <p className="text-center text-gray-400 text-xs">Fields marked with <span className="text-red-500">*</span> are required.</p>
+                </form>
+              </>
+            )}
           </div>
         </div>
       </section>

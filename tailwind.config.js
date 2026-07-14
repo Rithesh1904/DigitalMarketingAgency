@@ -6,7 +6,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#0f172a', // Slate 900
+        primary: '#172554', // Blue 950
         secondary: '#3b82f6', // Blue 500
         accent: '#2563eb', // Blue 600
         'light-bg': '#f8fafc',
