@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiArrowRight, FiCheckCircle } from 'react-icons/fi';
 import MarketingCube from './MarketingCube';
+import AnimatedCounter from '../AnimatedCounter/AnimatedCounter';
 
 const Hero = () => {
 
@@ -107,7 +108,7 @@ const Hero = () => {
               { value: '8+', label: 'Years of Excellence' },
             ].map((stat) => (
               <div key={stat.label} className="">
-                <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">{stat.value}</h3>
+                <AnimatedCounter val={stat.value} className="text-3xl md:text-4xl font-bold text-white mb-2 block" />
                 <p className="text-sm text-white/70 font-medium">{stat.label}</p>
               </div>
             ))}

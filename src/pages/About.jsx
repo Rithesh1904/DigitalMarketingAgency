@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FiTarget, FiEye, FiHeart, FiCheckCircle } from 'react-icons/fi';
 import { FaLinkedinIn, FaTwitter } from 'react-icons/fa';
+import AnimatedCounter from '../components/AnimatedCounter/AnimatedCounter';
 
 const teamMembers = [
   { name: 'Sarah Jenkins', role: 'CEO & Founder', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80' },
@@ -86,7 +87,7 @@ const About = () => {
                 { value: '8+', label: 'Years of Excellence' },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
-                  <p className="text-4xl font-bold text-accent mb-1">{stat.value}</p>
+                  <AnimatedCounter val={stat.value} className="text-4xl font-bold text-accent mb-1 block" />
                   <p className="text-gray-400 text-sm font-medium">{stat.label}</p>
                 </div>
               ))}

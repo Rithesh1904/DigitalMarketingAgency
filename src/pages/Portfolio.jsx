@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import AnimatedCounter from '../components/AnimatedCounter/AnimatedCounter';
 
 const projects = [
   {
@@ -132,7 +133,7 @@ const Portfolio = () => {
                 { value: '98%', label: 'Client Satisfaction' },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
-                  <p className="text-4xl font-bold text-accent mb-1">{stat.value}</p>
+                  <AnimatedCounter val={stat.value} className="text-4xl font-bold text-accent mb-1 block" />
                   <p className="text-gray-400 text-sm font-medium">{stat.label}</p>
                 </div>
               ))}

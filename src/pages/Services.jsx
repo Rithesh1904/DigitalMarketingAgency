@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiSearch, FiShare2, FiTrendingUp, FiCode, FiMail, FiAward, FiFileText, FiPenTool } from 'react-icons/fi';
+import AnimatedCounter from '../components/AnimatedCounter/AnimatedCounter';
 
 const allServices = [
   { id: 1, slug: 'seo', title: 'SEO', desc: 'Boost your organic traffic and rank higher on search engines with our proven SEO strategies.', icon: <FiSearch className="w-8 h-8 text-secondary" /> },
@@ -87,7 +88,7 @@ const Services = () => {
                 { value: '8+', label: 'Years Experience' },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
-                  <p className="text-4xl font-bold text-accent mb-1">{stat.value}</p>
+                  <AnimatedCounter val={stat.value} className="text-4xl font-bold text-accent mb-1 block" />
                   <p className="text-gray-400 text-sm font-medium">{stat.label}</p>
                 </div>
               ))}

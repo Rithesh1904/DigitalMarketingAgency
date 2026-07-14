@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiCheckCircle, FiArrowLeft, FiArrowRight, FiStar, FiTrendingUp, FiUsers, FiTarget } from 'react-icons/fi';
+import AnimatedCounter from '../components/AnimatedCounter/AnimatedCounter';
 
 const serviceDetails = {
   seo: {
@@ -308,7 +309,10 @@ const ServiceDetail = () => {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="text-center"
               >
-                <p className="text-3xl md:text-4xl font-bold text-primary">{s.val}</p>
+                <AnimatedCounter
+                  val={s.val}
+                  className="text-3xl md:text-4xl font-bold text-primary block"
+                />
                 <p className="text-gray-500 text-sm mt-1 font-medium">{s.label}</p>
               </motion.div>
             ))}
